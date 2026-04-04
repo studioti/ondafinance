@@ -1,12 +1,43 @@
 // import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { TransactionItem } from "../components/TransactionItem";
+import { Link, useParams } from "react-router-dom";
 import { NavBottom } from "../components/NavBottom";
 import { NavTop } from "../components/NavTop";
 import { TitlePage } from "../components/TitlePage";
-import { Check, CircleCheck } from "lucide-react";
+import { Check } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getBank } from "../services/bank";
+import { formatCurrency } from "../utils/currency";
 
 function Receipt() {
+    interface Transaction {
+        id: number;
+        amount: number;
+        key: string;
+        date: string;
+        hash: string;
+    }
+
+    const { data } = useQuery({
+        queryKey: ["bank"],
+        queryFn: getBank,
+    })
+
+    const { id } = useParams()
+
+    const transaction = data?.transactions.find(
+        (t: Transaction) => t.id === Number(id)
+    )
+
+    if (!transaction) {
+        return (
+            <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
+                <div className="page min-h-screen flex items-center justify-center">
+                    Carregando transação...
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
 
@@ -26,7 +57,7 @@ function Receipt() {
                 {/* Title */}
                 <TitlePage title={"Transferência Enviada"} subtitle={"Sua transação foi processada com sucesso"} />
 
-                {/* RECEIPT */}
+                {/* Receipt */}
                 <div className="md:col-span-2 bg-white p-8 rounded-[2rem] shadow relative overflow-hidden">
 
                     {/* Price */}
@@ -35,81 +66,71 @@ function Receipt() {
                             Saldo Total
                         </span>
                         <div className="mt-2 flex items-baseline gap-1">
-                            <span className="font-bold text-4xl">
-                                R$
-                            </span>
                             <span className="text-4xl font-bold">
-                                1.000,00
+                                {formatCurrency(Math.abs(transaction.amount))}
                             </span>
                         </div>
                     </div>
 
                     {/* From */}
-                    <div className="flex justify-between items-center py-4 border-b border-dashed text-left">
-                        <div>
-                            <p className="text-sm text-on-surface-variant">
-                                Para
-                            </p>
-                            <p className="font-semibold break-all text-md">
-                                thiago.aguiar86@gmail.com
-                            </p>
-                        </div>
+                    <div className="flex justify-between items-center py-4 border-b border-dashed text-left text-sm">
+                        <span className="text-on-surface-variant">
+                            Para
+                        </span>
+                        <span className="font-semibold break-all">
+                            {transaction.key}
+                        </span>
                     </div>
 
-                    {/* Detail */}
-                    <div className="grid grid-cols-2 gap-8 mt-6 text-left">
-                        <div className="space-y-6">
-                            <div>
-                                <p className="text-sm text-on-surface-variant">
-                                    Data
-                                </p>
-                                <p className="font-semibold">
-                                    25/04/2024
-                                </p>
-                            </div>
+                    {/* Date */}
+                    <div className="flex justify-between items-center py-4 border-b border-dashed text-left text-sm">
+                        <span className="text-on-surface-variant">
+                            Data
+                        </span>
+                        <span className="font-semibold break-all">
+                            {transaction.date}
+                        </span>
+                    </div>
 
-                            <div>
-                                <p className="text-sm text-on-surface-variant">
-                                    Tipo
-                                </p>
-                                <p className="font-semibold">
-                                    Pix Enviado
-                                </p>
-                            </div>
-                        </div>
+                    {/* To */}
+                    <div className="flex justify-between items-center py-4 border-b border-dashed text-left text-sm">
+                        <span className="text-on-surface-variant">
+                            Instituição
+                        </span>
+                        <span className="font-semibold break-all">
+                            Onda Finance
+                        </span>
+                    </div>
 
-                        <div className="space-y-6">
-                            <div>
-                                <p className="text-sm text-on-surface-variant">
-                                    Instituição
-                                </p>
-                                <p className="font-semibold">
-                                    Onda Finance
-                                </p>
-                            </div>
+                    {/* Type */}
+                    <div className="flex justify-between items-center py-4 border-b border-dashed text-left text-sm">
+                        <span className="text-on-surface-variant">
+                            Tipo de transação
+                        </span>
+                        <span className="font-semibold break-all">
+                            PIX Enviado
+                        </span>
+                    </div>
 
-                            <div>
-                                <p className="text-sm text-on-surface-variant">
-                                    Status
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    <p className="text-tertiary font-semibold text-green-700">
-                                        Concluído
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                    {/* Status */}
+                    <div className="flex justify-between items-center py-4 border-b border-dashed text-left text-sm">
+                        <span className="text-on-surface-variant">
+                            Status
+                        </span>
+                        <span className="font-semibold text-green-700 break-all">
+                            Concluído
+                        </span>
                     </div>
 
                     {/* ID */}
-                    <div className="pt-6 mt-6 border-t border-dashed text-left">
+                    <div className="pt-8 pb-2 text-left">
                         <p className="text-sm text-on-surface-variant">
                             ID da Transação
                         </p>
 
                         <div className="flex justify-between items-center bg-indigo-50 rounded-xl px-3 py-3 mt-3">
-                            <code className="text-sm break-all">
-                                E00038166202404251430s7a29e1z
+                            <code className="text-sm break-all uppercase">
+                                {transaction.hash}
                             </code>
                         </div>
                     </div>
@@ -124,7 +145,7 @@ function Receipt() {
                         Voltar ao histórico
                     </Link>
                 </section>
-                
+
             </main>
 
             {/* Nav */}
