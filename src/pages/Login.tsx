@@ -2,24 +2,40 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Waves } from "lucide-react";
 import { createBankIfNotExists } from "../services/bank";
+import { useForm } from "react-hook-form";
+import { useUserStore } from "../store/useStore"
 
 function Login() {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
-    function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
+    const setEmail = useUserStore((state) => state.setEmail)
 
+    const { register, handleSubmit, watch } = useForm()
+
+    const formValues = watch()
+
+    const isDisabled =
+        !formValues.email ||
+        !formValues.password
+
+    function handleLogin(data: any) {
         const user = {
             id: Math.floor(Math.random() * 10000),
-            email,
+            email: data.email,
         }
 
-        localStorage.setItem("user", JSON.stringify(user))
+        setEmail(formValues.email)
 
-        createBankIfNotExists()
-        navigate("/dashboard")
+        try {
+            localStorage.setItem("user", JSON.stringify(user))
+
+            createBankIfNotExists()
+            
+            navigate("/dashboard")
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -48,7 +64,7 @@ function Login() {
 
                 {/* Login */}
                 <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-lg border border-white/50">
-                    <form onSubmit={handleLogin} className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit(handleLogin)}>
 
                         {/* Email */}
                         <div className="space-y-2">
@@ -64,8 +80,10 @@ function Login() {
                                     placeholder="exemplo@email.com"
                                     className="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-200 outline-none"
                                     id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    {...register("email")}
+                                    onChange={(e) => {
+                                        register("email").onChange(e)
+                                    }}
                                 />
                             </div>
                         </div>
@@ -85,8 +103,10 @@ function Login() {
                                     placeholder="••••••••"
                                     className="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-200 outline-none"
                                     id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    {...register("password")}
+                                    onChange={(e) => {
+                                        register("password").onChange(e)
+                                    }}
                                 />
                             </div>
                         </div>
@@ -94,14 +114,14 @@ function Login() {
                         {/* Button */}
                         <button
                             type="submit"
-                            disabled={!email || !password}
+                            disabled={isDisabled}
                             className="w-full bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50"
                         >
                             Entrar
                         </button>
                     </form>
                 </div>
-                
+
             </div>
         </main>
     );

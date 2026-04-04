@@ -50,7 +50,7 @@ function Receipt() {
                 {/* Icon */}
                 <div className="w-15 h-15 rounded-full bg-green-300 flex items-center justify-center m-auto mb-5">
                     <div className="w-8 h-8 rounded-full bg-green-700 flex items-center justify-center">
-                        <Check size={20} className="text-green-300 font-bold" />
+                        <Check size={20} className="text-green-300" />
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@ function Receipt() {
                     {/* Price */}
                     <div className="flex flex-col items-center mb-10 relative z-10">
                         <span className="text-md opacity-70">
-                            Saldo Total
+                            Valor da transferência
                         </span>
                         <div className="mt-2 flex items-baseline gap-1">
                             <span className="text-4xl font-bold">
@@ -75,7 +75,7 @@ function Receipt() {
                     {/* From */}
                     <div className="flex justify-between items-center py-4 border-b border-dashed text-left text-sm">
                         <span className="text-on-surface-variant">
-                            Para
+                            Chave Pix
                         </span>
                         <span className="font-semibold break-all">
                             {transaction.key}

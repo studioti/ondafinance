@@ -6,6 +6,7 @@ import { NavTop } from "../components/NavTop";
 import { useQuery } from "@tanstack/react-query";
 import { getBank } from "../services/bank";
 import { formatCurrency } from "../utils/currency";
+import { useUserStore } from "../store/useStore"
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -20,8 +21,12 @@ function Dashboard() {
     })
 
     const balance = data?.balance ?? 0
+
     const transactions = data?.transactions ?? []
-    const user = JSON.parse(localStorage.getItem("user") || "null")
+
+    // const user = JSON.parse(localStorage.getItem("user") || "null")
+
+    const email = useUserStore((state) => state.email)
 
     return (
         <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
@@ -38,7 +43,7 @@ function Dashboard() {
                         Bem-vindo(a)
                     </p>
                     <p className="text-md font-medium break-all">
-                        {user?.email ?? "Usuário"}
+                        {email || "Usuário"}
                     </p>
                 </section>
 

@@ -5,8 +5,10 @@ import { NavTop } from "../components/NavTop";
 import { TitlePage } from "../components/TitlePage";
 import { Key, Banknote, MessageSquareQuote } from "lucide-react";
 import { useForm } from "react-hook-form"
-import { getBank , setBank } from "../services/bank";
+import { getBank, setBank } from "../services/bank";
 import { formatCurrency, formatCurrencyInput, formatDocument, parseCurrency } from "../utils/currency";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
 
 function Transfer() {
     const navigate = useNavigate();
@@ -25,7 +27,22 @@ function Transfer() {
         queryFn: getBank,
     })
 
-    const { register, handleSubmit, watch } = useForm()
+    const transferSchema = z.object({
+        pix_key: z.string().min(1, "Informe a chave Pix"),
+        price: z.string().min(1, "Informe o valor"),
+        message: z.string().min(1, "Informe a mensagem"),
+    })
+
+    type TransferFormData = z.infer<typeof transferSchema>
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors }
+    } = useForm<TransferFormData>({
+        resolver: zodResolver(transferSchema),
+    })
 
     const formValues = watch()
 
@@ -116,6 +133,9 @@ function Transfer() {
                                         register("pix_key").onChange(e)
                                     }}
                                 />
+                                {errors.pix_key && (
+                                    <p className="text-red-500 text-sm">{errors.pix_key.message}</p>
+                                )}
                             </div>
                         </div>
 
@@ -142,6 +162,9 @@ function Transfer() {
                                         register("price").onChange(e)
                                     }}
                                 />
+                                {errors.price && (
+                                    <p className="text-red-500 text-sm">{errors.price.message}</p>
+                                )}
                             </div>
                         </div>
 
@@ -161,6 +184,9 @@ function Transfer() {
                                     id="message"
                                     {...register("message")}
                                 ></textarea>
+                                {errors.message && (
+                                    <p className="text-red-500 text-sm">{errors.message.message}</p>
+                                )}
                             </div>
                         </div>
 

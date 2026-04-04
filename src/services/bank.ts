@@ -1,24 +1,24 @@
-export function getBank() {
-    return JSON.parse(localStorage.getItem("bank") || "null")
+import { api } from "./api"
+
+export async function getBank() {
+    const response = await api.get("/bank")
+    return response.data
 }
 
-export function setBank(data: any) {
-    localStorage.setItem("bank", JSON.stringify(data))
-    return data
+export async function setBank(data: any) {
+    const response = await api.post("/bank", data)
+    return response.data
 }
 
 export function createBankIfNotExists() {
-    const existing = getBank()
+    const existingBank = localStorage.getItem("bank")
 
-    if (!existing) {
+    if (!existingBank) {
         const initialData = {
             balance: 1000,
             transactions: [],
         }
 
         localStorage.setItem("bank", JSON.stringify(initialData))
-        return initialData
     }
-
-    return existing
 }

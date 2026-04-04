@@ -5,10 +5,16 @@ import { NavTop } from "../components/NavTop";
 import { TransactionItem } from "../components/TransactionItem";
 import { TitlePage } from "../components/TitlePage";
 import { getBank } from "../services/bank";
+import { useQuery } from "@tanstack/react-query";
 
 function Transaction() {
 
-    const transactions = getBank()?.transactions ?? null
+    const { data } = useQuery({
+        queryKey: ["bank"],
+        queryFn: getBank,
+    })
+
+    const transactions = data?.transactions ?? []
 
     return (
         <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
@@ -18,13 +24,13 @@ function Transaction() {
 
             {/* Main */}
             <main className="flex-1 px-6 pt-6 max-w-2xl mx-auto w-full">
-                
+
                 {/* Transactions */}
                 <section className="mb-6">
 
                     {/* Title */}
                     <TitlePage title={"Histórico de Transações"} subtitle={"Visualize seus fluxos financeiros"} />
-                    
+
                     {/* Item */}
                     <div className="space-y-3">
                         {transactions.length ? (
@@ -36,7 +42,7 @@ function Transaction() {
                                     date={t.date}
                                 />
                             ))
-                            ) : (
+                        ) : (
                             <p className="pb-4">Não há transações realizadas.</p>
                         )}
                     </div>
