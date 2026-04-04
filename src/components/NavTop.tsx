@@ -1,7 +1,9 @@
 import { SquareArrowRightExit, CircleUser, Waves } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useLogout } from "../hooks/useLogout";
 
 export function NavTop() {
+    const logout = useLogout()
+    
     return (
         <header className="flex items-center w-full px-6 py-4 bg-[#faf8ff] backdrop-blur-md relative">
 
@@ -19,9 +21,9 @@ export function NavTop() {
 
             {/* Logout */}
             <div className="ml-auto">
-                <Link to="/">
+                <button onClick={logout}>
                     <SquareArrowRightExit size={25} />
-                </Link>
+                </button>
             </div>
 
         </header>
