@@ -1,38 +1,98 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { NavBottom } from "../components/NavBottom";
 import { NavTop } from "../components/NavTop";
 import { TitlePage } from "../components/TitlePage";
 import { Key, Banknote, MessageSquareQuote } from "lucide-react";
+import { useForm } from "react-hook-form"
+import { getBank , setBank } from "../services/bank";
+import { formatCurrency, formatCurrencyInput, formatDocument, parseCurrency } from "../utils/currency";
 
-function Receipt() {
+function Transfer() {
     const navigate = useNavigate();
-    const [pix_key, setPixKey] = useState("");
-    const [price, setPrice] = useState("");
-    const [message, setMessage] = useState("");
 
-    function handleTransfer(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
+    const queryClient = useQueryClient()
 
-        navigate("/dashboard")
-        console.log("pagamento realizado:", { pix_key, price, message })
+    const mutation = useMutation({
+        mutationFn: setBank,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["bank"] })
+        },
+    })
+
+    const { data: bank } = useQuery({
+        queryKey: ["bank"],
+        queryFn: getBank,
+    })
+
+    const { register, handleSubmit, watch } = useForm()
+
+    const formValues = watch()
+
+    const price = formValues.price || ""
+    const amount = parseCurrency(price)
+
+    const isDisabled =
+        !formValues.pix_key ||
+        !formValues.price ||
+        !formValues.message ||
+        amount <= 0 ||
+        amount > (bank?.balance ?? 0)
+
+    function handleTransfer(data: any) {
+        const amount = Math.abs(parseCurrency(data.price))
+
+        const newTransaction = {
+            id: Math.floor(Math.random() * 100000),
+            key: data.pix_key,
+            hash: Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 8),
+            amount: amount,
+            message: data.message,
+            date: new Date().toLocaleString("pt-BR")
+        }
+
+        try {
+            if ((bank?.balance ?? 0) >= amount) {
+
+                const updatedBank = {
+                    ...bank,
+                    balance: bank.balance - amount,
+                    transactions: [
+                        {
+                            ...newTransaction,
+                            amount: -amount,
+                        },
+                        ...bank.transactions,
+                    ],
+                }
+
+                mutation.mutate(updatedBank, {
+                    onSuccess: () => {
+                        navigate("/dashboard")
+                    }
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
-        <div className="bg-surface text-on-surface min-h-screen flex flex-col pb-24">
+        <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
 
             {/* Header */}
             <NavTop />
 
             {/* Main */}
             <main className="flex-1 px-6 pt-6 max-w-2xl mx-auto w-full">
-                
+
                 {/* Title */}
                 <TitlePage title={"Enviar Pix"} subtitle={"Transfira instantaneamente"} />
 
                 {/* Transfer */}
                 <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-lg border border-white/50">
-                    <form onSubmit={handleTransfer} className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit(handleTransfer)}>
 
                         {/* Key */}
                         <div className="space-y-2">
@@ -45,11 +105,16 @@ function Receipt() {
                                 </span>
                                 <input
                                     type="text"
-                                    placeholder="E-mail, CPF, CNPJ ou Celular"
+                                    placeholder="Digite CPF ou CNPJ"
                                     className="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-200 outline-none"
                                     id="pix_key"
-                                    value={pix_key}
-                                    onChange={(e) => setPixKey(e.target.value)}
+                                    {...register("pix_key")}
+                                    onChange={(e) => {
+                                        const formatted = formatDocument(e.target.value)
+                                        e.target.value = formatted
+
+                                        register("pix_key").onChange(e)
+                                    }}
                                 />
                             </div>
                         </div>
@@ -69,12 +134,17 @@ function Receipt() {
                                     placeholder="R$ 0,00"
                                     className="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-200 outline-none"
                                     id="price"
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
+                                    {...register("price")}
+                                    onChange={(e) => {
+                                        const formatted = formatCurrencyInput(e.target.value)
+                                        e.target.value = formatted
+
+                                        register("price").onChange(e)
+                                    }}
                                 />
                             </div>
                         </div>
-                        
+
                         {/* Message */}
                         <div className="space-y-2">
                             <div className="flex justify-between ml-1">
@@ -89,23 +159,27 @@ function Receipt() {
                                     placeholder="O que é esse pagamento?"
                                     className="w-full pl-12 pr-4 py-4 bg-gray-100 rounded-xl focus:ring-2 focus:ring-indigo-200 outline-none h-35"
                                     id="message"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
+                                    {...register("message")}
                                 ></textarea>
                             </div>
+                        </div>
+
+                        <div className="flex justify-center gap-2">
+                            <span>Saldo disponível:</span>
+                            <span className="ms-2 font-bold text-green-600">{formatCurrency(bank?.balance ?? 0)}</span>
                         </div>
 
                         {/* Button */}
                         <button
                             type="submit"
-                            disabled={!pix_key || !price || !message}
+                            disabled={isDisabled}
                             className="w-full bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50"
                         >
-                            Enviar Pix
+                            {amount > (bank?.balance ?? 0) ? 'Saldo insuficiente' : 'Enviar Pix'}
                         </button>
                     </form>
                 </div>
-                
+
             </main>
 
             {/* Nav */}
@@ -114,4 +188,5 @@ function Receipt() {
     );
 }
 
-export default Receipt
+export default Transfer
+

@@ -3,10 +3,28 @@ import { Link, useNavigate } from "react-router-dom";
 import { TransactionItem } from "../components/TransactionItem";
 import { NavBottom } from "../components/NavBottom";
 import { NavTop } from "../components/NavTop";
+import { useQuery } from "@tanstack/react-query";
+import { getBank } from "../services/bank";
+import { formatCurrency } from "../utils/currency";
 
 function Dashboard() {
+    const navigate = useNavigate();
+
+    function handleTransfer() {
+        navigate("/transfer")
+    }
+
+    const { data } = useQuery({
+        queryKey: ["bank"],
+        queryFn: getBank,
+    })
+
+    const balance = data?.balance ?? 0
+    const transactions = data?.transactions ?? []
+    const user = JSON.parse(localStorage.getItem("user") || "null")
+
     return (
-        <div className="bg-surface text-on-surface min-h-screen flex flex-col pb-24">
+        <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
 
             {/* Header */}
             <NavTop />
@@ -19,8 +37,8 @@ function Dashboard() {
                     <p className="text-md opacity-70">
                         Bem-vindo(a)
                     </p>
-                    <p className="text-xl font-bold">
-                        Thiago
+                    <p className="text-md font-medium break-all">
+                        {user?.email ?? "Usuário"}
                     </p>
                 </section>
 
@@ -34,11 +52,8 @@ function Dashboard() {
                                 Saldo Total
                             </span>
                             <div className="mt-2 flex items-baseline gap-1">
-                                <span className="font-bold text-4xl">
-                                    R$
-                                </span>
                                 <span className="text-4xl font-bold">
-                                    1.000,00
+                                    { formatCurrency(balance) }
                                 </span>
                             </div>
                         </div>
@@ -47,12 +62,15 @@ function Dashboard() {
 
                 {/* Button */}
                 <section className="grid gap-4 w-full mb-10 text-left">
-                    <Link
-                        to="/transfer"
+                    <button
+                        onClick={handleTransfer}
+                        disabled={
+                            balance === 0
+                        }
                         className="w-full text-center relative bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50"
                     >
                         Realizar Pix
-                    </Link>
+                    </button>
                 </section>
 
                 {/* Transactions */}
@@ -68,7 +86,18 @@ function Dashboard() {
 
                     {/* Item */}
                     <div className="space-y-3">
-                        <TransactionItem title={""} amount={0} date={"01/04/2026"} />
+                        {transactions.length ? (
+                            transactions.slice(0, 3).map((t: any) => (
+                                <TransactionItem
+                                    key={t.id}
+                                    id={t.id}
+                                    amount={t.amount}
+                                    date={t.date}
+                                />
+                            ))
+                            ) : (
+                            <p className="py-4">Não há transações realizadas.</p>
+                        )}
                     </div>
                 </section>
             </main>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Waves } from "lucide-react";
+import { createBankIfNotExists } from "../services/bank";
 
 function Login() {
     const navigate = useNavigate();
@@ -10,12 +11,19 @@ function Login() {
     function handleLogin(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
 
+        const user = {
+            id: Math.floor(Math.random() * 10000),
+            email,
+        }
+
+        localStorage.setItem("user", JSON.stringify(user))
+
+        createBankIfNotExists()
         navigate("/dashboard")
-        console.log("Login clicado:", { email, password })
     }
 
     return (
-        <main className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-body text-[#131b2e]">
+        <main className="page min-h-screen flex items-center justify-center p-6 relative overflow-hidden font-body text-[#131b2e]">
 
             {/* Background */}
             <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl"></div>

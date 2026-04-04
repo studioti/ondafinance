@@ -1,13 +1,17 @@
 // import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { NavBottom } from "../components/NavBottom";
 import { NavTop } from "../components/NavTop";
 import { TransactionItem } from "../components/TransactionItem";
 import { TitlePage } from "../components/TitlePage";
+import { getBank } from "../services/bank";
 
 function Transaction() {
+
+    const transactions = getBank()?.transactions ?? null
+
     return (
-        <div className="bg-surface text-on-surface min-h-screen flex flex-col pb-24">
+        <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
 
             {/* Header */}
             <NavTop />
@@ -23,7 +27,18 @@ function Transaction() {
                     
                     {/* Item */}
                     <div className="space-y-3">
-                        <TransactionItem title={""} amount={0} date={"01/04/2026"} />
+                        {transactions.length ? (
+                            transactions.map((t: any) => (
+                                <TransactionItem
+                                    key={t.id}
+                                    id={t.id}
+                                    amount={t.amount}
+                                    date={t.date}
+                                />
+                            ))
+                            ) : (
+                            <p className="pb-4">Não há transações realizadas.</p>
+                        )}
                     </div>
 
                     {/* Button */}

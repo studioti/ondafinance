@@ -8,7 +8,7 @@ import { Check, CircleCheck } from "lucide-react";
 
 function Receipt() {
     return (
-        <div className="bg-surface text-on-surface min-h-screen flex flex-col pb-24">
+        <div className="page bg-surface text-on-surface min-h-screen flex flex-col pb-24">
 
             {/* Header */}
             <NavTop />
@@ -93,7 +93,7 @@ function Receipt() {
                                     Status
                                 </p>
                                 <div className="flex items-center gap-2">
-                                    <p className="text-tertiary font-semibold">
+                                    <p className="text-tertiary font-semibold text-green-700">
                                         Concluído
                                     </p>
                                 </div>
