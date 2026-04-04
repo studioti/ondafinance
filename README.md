@@ -1,73 +1,203 @@
-# React + TypeScript + Vite
+# 🚀 Onda Finance
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```{=html}
+<p align="center">
+```
+💸 Simulação de aplicativo bancário moderno com foco em UX, arquitetura
+e boas práticas
+```{=html}
+</p>
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+------------------------------------------------------------------------
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🌐 Demo
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+> 🔗 Adicione aqui o link do deploy (Vercel/Netlify)
+
+    https://ondafinance.netlify.app
+
+------------------------------------------------------------------------
+
+## 📸 Preview
+
+> (opcional --- adicione um print ou gif do projeto)
+
+    ![preview](./public/preview.png)
+
+------------------------------------------------------------------------
+
+## 🧾 Sobre o projeto
+
+O **Onda Finance** é uma aplicação web que simula um app bancário,
+desenvolvida como parte de um desafio técnico de front-end.
+
+O foco do projeto é demonstrar:
+
+-   Organização de código
+-   Boas práticas de arquitetura
+-   Experiência do usuário (UX)
+-   Uso de ferramentas modernas do ecossistema React
+
+------------------------------------------------------------------------
+
+## ✨ Funcionalidades
+
+### 🔐 Login (mock)
+
+-   Persistência de sessão via localStorage
+
+### 📊 Dashboard
+
+-   Exibição de saldo
+-   Listagem dinâmica de transações
+
+### 💸 Transferência (Pix)
+
+-   Formulário com validação
+-   Máscaras de input (CPF/CNPJ e moeda)
+-   Atualização instantânea do saldo
+
+### 🧾 Recibo
+
+-   Exibição detalhada da transação
+-   ID/hash único da operação
+
+------------------------------------------------------------------------
+
+## 🛠️ Tecnologias
+
+### Core
+
+-   React + TypeScript
+-   Vite
+
+### Estilização
+
+-   TailwindCSS
+
+### Estado e dados
+
+-   React Query (server state)
+-   Zustand (client state)
+
+### Formulários
+
+-   React Hook Form
+-   Zod
+
+### API (mock)
+
+-   Axios
+-   localStorage como backend simulado
+
+### Testes
+
+-   Vitest
+
+------------------------------------------------------------------------
+
+## ⚙️ Como rodar o projeto
+
+``` bash
+git clone <url-do-repo>
+cd <nome-do-projeto>
+npm install
+npm run dev
 ```
+
+A aplicação estará disponível em:
+
+    http://localhost:5173
+
+------------------------------------------------------------------------
+
+## 🧪 Testes
+
+O projeto conta com teste unitário utilizando **Vitest**.
+
+Cobertura atual: - Função de conversão de moeda (`parseCurrency`)
+
+``` bash
+npm run test
+```
+
+------------------------------------------------------------------------
+
+## 🧠 Decisões técnicas
+
+### 📦 Separação de estado
+
+-   Server State → React Query
+-   Client State → Zustand
+
+------------------------------------------------------------------------
+
+### 💾 Persistência
+
+-   localStorage como mock de backend
+
+------------------------------------------------------------------------
+
+### 🔄 Sincronização
+
+-   invalidateQueries após mutations
+
+------------------------------------------------------------------------
+
+### 🧾 Validação
+
+-   Zod + React Hook Form
+
+------------------------------------------------------------------------
+
+### 🎯 UX
+
+-   Máscaras de input
+-   Botões desabilitados
+-   Feedback visual consistente
+
+------------------------------------------------------------------------
+
+## 🔐 Segurança (conceitual)
+
+### 🛡️ Engenharia reversa
+
+-   Minificação e obfuscação
+-   Variáveis de ambiente
+
+### 🔒 Vazamento de dados
+
+-   Uso de HTTPS
+-   Nenhum dado sensível no frontend
+-   Tokens seguros (JWT)
+
+------------------------------------------------------------------------
+
+## 🚧 Melhorias futuras
+
+-   API real
+-   Autenticação completa
+-   Persistência por usuário
+-   Testes mais completos
+-   Dark mode
+
+------------------------------------------------------------------------
+
+## 📌 Considerações finais
+
+Projeto focado em boas práticas, arquitetura e experiência do usuário.
+
+------------------------------------------------------------------------
+
+## 👨‍💻 Autor
+
+Thiago Aguiar
+
+LinkedIn: https://linkedin.com/in/oithi
+
+------------------------------------------------------------------------
+
+# ⭐
+
+Se esse projeto te ajudou, considere dar uma estrela!
