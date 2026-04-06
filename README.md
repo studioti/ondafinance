@@ -1,27 +1,17 @@
 # 🚀 Onda Finance
 
-```{=html}
-<p align="center">
-```
 💸 Simulação de aplicativo bancário moderno com foco em UX, arquitetura
 e boas práticas
-```{=html}
-</p>
-```
 
 ------------------------------------------------------------------------
 
 ## 🌐 Demo
-
-> 🔗 Adicione aqui o link do deploy (Vercel/Netlify)
 
     https://ondafinance.netlify.app
 
 ------------------------------------------------------------------------
 
 ## 📸 Preview
-
-> (opcional --- adicione um print ou gif do projeto)
 
     ![preview](./public/preview.png)
 
@@ -75,6 +65,8 @@ O foco do projeto é demonstrar:
 ### Estilização
 
 -   TailwindCSS
+-   Shadcn UI
+-   Radix
 
 ### Estado e dados
 
