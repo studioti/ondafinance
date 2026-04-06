@@ -147,14 +147,15 @@ npm run test
 
 ### 🛡️ Engenharia reversa
 
--   Minificação e obfuscação
--   Variáveis de ambiente
+- Uso de build otimizado e minificado (Vite)
+- Separação de responsabilidades para evitar exposição de lógica sensível no frontend
+- Preparação para uso de variáveis de ambiente em cenários reais
 
 ### 🔒 Vazamento de dados
 
--   Uso de HTTPS
--   Nenhum dado sensível no frontend
--   Tokens seguros (JWT)
+- Uso de build otimizado e minificado (Vite)
+- Separação de responsabilidades para evitar exposição de lógica sensível no frontend
+- Preparação para uso de variáveis de ambiente em cenários reais
 
 ------------------------------------------------------------------------
 
