@@ -59,8 +59,6 @@ O foco do projeto é demonstrar:
 ### Estilização
 
 -   TailwindCSS
--   Shadcn UI
--   Radix
 
 ### Estado e dados
 
