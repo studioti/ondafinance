@@ -1,9 +1,11 @@
 import { BanknoteArrowUp, LayoutGrid, SquareArrowRightExit, History } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useLogout } from "../hooks/useLogout";
 
 export function NavBottom() {
     const location = useLocation()
     const isActive = (path: string) => location.pathname === path
+    const logout = useLogout()
 
     return (
         <nav className="fixed bottom-0 left-0 w-full">
@@ -38,15 +40,15 @@ export function NavBottom() {
                     <span className="text-xs">Transações</span>
                 </Link>
 
-                <Link 
-                    to="/" 
+                
+                <button onClick={logout} 
                     className={`flex flex-col items-center ${
                         isActive("/") ? "text-indigo-600" : "text-gray-400"
                     }`}
                 >
                     <SquareArrowRightExit size={22} />
                     <span className="text-xs">Sair</span>
-                </Link>
+                </button>
             </div>
         </nav>
     )

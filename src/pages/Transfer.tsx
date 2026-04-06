@@ -9,9 +9,13 @@ import { getBank, setBank } from "../services/bank";
 import { formatCurrency, formatCurrencyInput, formatDocument, parseCurrency } from "../utils/currency";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react";
+import { Loading } from "../components/Loading";
 
 function Transfer() {
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false)
 
     const queryClient = useQueryClient()
 
@@ -71,6 +75,8 @@ function Transfer() {
         try {
             if ((bank?.balance ?? 0) >= amount) {
 
+                setLoading(true)
+
                 const updatedBank = {
                     ...bank,
                     balance: bank.balance - amount,
@@ -83,14 +89,17 @@ function Transfer() {
                     ],
                 }
 
-                mutation.mutate(updatedBank, {
-                    onSuccess: () => {
-                        navigate("/dashboard")
-                    }
-                })
+                setTimeout(() => {
+                    mutation.mutate(updatedBank, {
+                        onSuccess: () => {
+                            navigate(`/receipt/${newTransaction.id}`)
+                        }
+                    })
+                }, 1500)
             }
 
         } catch (error) {
+            setLoading(false)
             console.log(error);
         }
     }
@@ -105,7 +114,7 @@ function Transfer() {
             <main className="flex-1 px-6 pt-6 max-w-2xl mx-auto w-full">
 
                 {/* Title */}
-                <TitlePage title={"Enviar Pix"} subtitle={"Transfira instantaneamente"} />
+                <TitlePage title={"Enviar PIX"} subtitle={"Transfira instantaneamente"} />
 
                 {/* Transfer */}
                 <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-lg border border-white/50">
@@ -199,9 +208,17 @@ function Transfer() {
                         <button
                             type="submit"
                             disabled={isDisabled}
-                            className="w-full bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+                            className="w-full bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50 flex justify-center"
                         >
-                            {amount > (bank?.balance ?? 0) ? 'Saldo insuficiente' : 'Enviar Pix'}
+                            {loading && <Loading />}
+
+                            {loading
+                                ? "Processando..."
+                                : amount > (bank?.balance ?? 0)
+                                    ? "Saldo insuficiente"
+                                    : "Enviar Pix"
+                            }
+
                         </button>
                     </form>
                 </div>

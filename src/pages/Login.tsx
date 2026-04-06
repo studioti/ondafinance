@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Waves } from "lucide-react";
+import { Mail, Lock, Waves, Loader } from "lucide-react";
 import { createBankIfNotExists } from "../services/bank";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "../store/useStore"
+import { Loading } from "../components/Loading";
 
 function Login() {
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(false)
 
     const setEmail = useUserStore((state) => state.setEmail)
 
@@ -19,6 +22,9 @@ function Login() {
         !formValues.password
 
     function handleLogin(data: any) {
+
+        setLoading(true)
+
         const user = {
             id: Math.floor(Math.random() * 10000),
             email: data.email,
@@ -30,10 +36,13 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(user))
 
             createBankIfNotExists()
-            
-            navigate("/dashboard")
+
+            setTimeout(() => {
+                navigate("/dashboard")
+            }, 1500)
 
         } catch (error) {
+            setLoading(false)
             console.log(error)
         }
     }
@@ -115,9 +124,10 @@ function Login() {
                         <button
                             type="submit"
                             disabled={isDisabled}
-                            className="w-full bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+                            className="w-full bg-gradient-to-br from-[#4648d4] to-[#6063ee] text-white font-bold py-4 rounded-xl hover:opacity-90 transition disabled:opacity-50 flex justify-center align-center"
                         >
-                            Entrar
+                            {loading && <Loading />}
+                            {loading ? "Processando..." : "Entrar"}
                         </button>
                     </form>
                 </div>

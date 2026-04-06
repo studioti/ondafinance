@@ -7,7 +7,7 @@ e boas práticas
 
 ## 🌐 Link
 
-URL: https://ondafinance.netlify.app
+URL: https://test-ondafinance.netlify.app
 
 ------------------------------------------------------------------------
 
