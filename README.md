@@ -153,9 +153,9 @@ npm run test
 
 ### 🔒 Vazamento de dados
 
-- Uso de build otimizado e minificado (Vite)
-- Separação de responsabilidades para evitar exposição de lógica sensível no frontend
-- Preparação para uso de variáveis de ambiente em cenários reais
+- Nenhum dado sensível persistido no frontend
+- Uso de HTTPS para comunicação segura
+- Estrutura preparada para integração com autenticação segura (ex: JWT)
 
 ------------------------------------------------------------------------
 
