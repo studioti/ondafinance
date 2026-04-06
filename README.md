@@ -5,15 +5,9 @@ e boas práticas
 
 ------------------------------------------------------------------------
 
-## 🌐 Demo
+## 🌐 Link
 
-    https://ondafinance.netlify.app
-
-------------------------------------------------------------------------
-
-## 📸 Preview
-
-    ![preview](./public/preview.png)
+URL: https://ondafinance.netlify.app
 
 ------------------------------------------------------------------------
 
@@ -187,9 +181,3 @@ Projeto focado em boas práticas, arquitetura e experiência do usuário.
 Thiago Aguiar
 
 LinkedIn: https://linkedin.com/in/oithi
-
-------------------------------------------------------------------------
-
-# ⭐
-
-Se esse projeto te ajudou, considere dar uma estrela!
