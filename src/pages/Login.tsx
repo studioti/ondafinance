@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Waves, Loader } from "lucide-react";
+import { Mail, Lock, Waves } from "lucide-react";
 import { createBankIfNotExists } from "../services/bank";
 import { useForm } from "react-hook-form";
 import { useUserStore } from "../store/useStore"
