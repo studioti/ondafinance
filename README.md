@@ -171,7 +171,8 @@ npm run test
 
 ## 📌 Considerações finais
 
-Projeto focado em boas práticas, arquitetura e experiência do usuário.
+
+Desenvolvido por Thiago Aguiar como parte de processo seletivo e portfólio pessoal. Teste Focado em boas práticas, arquitetura e experiência do usuário.
 
 ------------------------------------------------------------------------
 
